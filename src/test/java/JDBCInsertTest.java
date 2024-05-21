@@ -37,11 +37,19 @@ public class JDBCInsertTest {
 
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
-      System.out.println("JDBC Driver not found.");
+      System.out.println("드라이버 로딩 실패!!");
     } catch (SQLException e) {
-      e.printStackTrace();
+      System.out.println("에러 : " + e);
       System.out.println("연결 실패!!");
     } finally {
+      // 리소스 해제
+      if (prst != null) {
+        try {
+          prst.close();
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      }
       // 연결 닫기
       if (conn != null) {
         try {
