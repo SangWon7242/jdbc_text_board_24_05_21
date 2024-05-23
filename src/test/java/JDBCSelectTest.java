@@ -25,7 +25,7 @@ public class JDBCSelectTest {
       // 데이터베이스 연결
       conn = DriverManager.getConnection(url, user, password);
 
-      // SQL 삽입 명령 준비
+      // SQL 조회
       String sql = "SELECT *";
       sql += " FROM article";
       sql += " ORDER BY id DESC";
