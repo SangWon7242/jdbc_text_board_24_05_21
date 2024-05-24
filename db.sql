@@ -30,3 +30,13 @@ SET regDate = NOW(),
 updateDate = NOW(),
 title = '제목3',
 `body` = '내용3';
+
+# 회원 테이블 생성
+CREATE TABLE `member` (
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	loginId CHAR(100) NOT NULL UNIQUE,
+	loginPw CHAR(200) NOT NULL,
+	`name` CHAR(100) NOT NULL
+);

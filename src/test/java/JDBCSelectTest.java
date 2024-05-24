@@ -1,4 +1,4 @@
-import com.sbs.text.board.Article;
+import com.sbs.text.board.article.Article;
 
 import java.sql.*;
 import java.util.ArrayList;

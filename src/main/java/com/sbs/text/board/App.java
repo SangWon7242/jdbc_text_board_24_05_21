@@ -1,6 +1,9 @@
 package com.sbs.text.board;
 
+import com.sbs.text.board.article.Article;
+import com.sbs.text.board.article.ArticleController;
 import com.sbs.text.board.container.Container;
+import com.sbs.text.board.member.MemberController;
 import com.sbs.text.board.util.MysqlUtil;
 import com.sbs.text.board.util.SecSql;
 
@@ -31,14 +34,18 @@ public class App {
         MysqlUtil.setDBInfo("localhost", "sbsst", "sbs123414", "text_board");
         MysqlUtil.setDevMode(isDevMode());
 
-        doAction(sc, rq);
+        action(sc, rq);
       }
     } finally {
       sc.close();
     }
   }
 
-  private void doAction(Scanner sc, Rq rq) {
+  private void action(Scanner sc, Rq rq) {
+    MemberController memberController = Container.memberController;
+    ArticleController articleController = Container.articleController;
+
+
     if (rq.getUrlPath().equals("/usr/article/write")) {
       System.out.println("== 게시물 추가 ==");
 
@@ -58,7 +65,7 @@ public class App {
 
       Article article = new Article(id, title, body);
 
-      System.out.printf("%d번 게시물이 등록되었습니다.\n", article.id);
+      System.out.printf("%d번 게시물이 등록되었습니다.\n", article.getId());
     } else if (rq.getUrlPath().equals("/usr/article/list")) {
       List<Article> articles = new ArrayList<>();
 
@@ -81,7 +88,7 @@ public class App {
       }
 
       for (Article article : articles) {
-        System.out.printf("%d / %s\n", article.id, article.title);
+        System.out.printf("%d / %s\n", article.getId(), article.getTitle());
       }
 
     } else if (rq.getUrlPath().equals("/usr/article/detail")) {
@@ -114,11 +121,11 @@ public class App {
       Article article = new Article(articleMap);
 
       System.out.println("== 게시물 상세보기 ==");
-      System.out.printf("번호 : %d\n", article.id);
-      System.out.printf("작성날짜 : %s\n", article.regDate);
-      System.out.printf("수정날짜 : %s\n", article.updateDate);
-      System.out.printf("제목 : %s\n", article.title);
-      System.out.printf("내용 : %s\n", article.body);
+      System.out.printf("번호 : %d\n", article.getId());
+      System.out.printf("작성날짜 : %s\n", article.getRegDate());
+      System.out.printf("수정날짜 : %s\n", article.getUpdateDate());
+      System.out.printf("제목 : %s\n", article.getTitle());
+      System.out.printf("내용 : %s\n", article.getBody());
 
 
     } else if (rq.getUrlPath().equals("/usr/article/modify")) {
@@ -187,93 +194,7 @@ public class App {
 
       System.out.printf("%d번 게시물이 삭제되었습니다.\n", id);
     } else if (rq.getUrlPath().equals("/usr/member/join")) {
-      String loginId;
-      String loginPw;
-      String loginPwConfirm;
-      String name;
-
-      System.out.println("== 회원 가입 ==");
-
-      // 로그인 아이디 입력
-      while (true) {
-        System.out.print("로그인 아이디 : ");
-        loginId = sc.nextLine();
-
-        if(loginId.trim().isEmpty()) {
-          System.out.println("로그인 아이디를 입력해주세요.");
-          continue;
-        }
-
-        SecSql sql = new SecSql();
-        sql.append("SELECT COUNT(*) > 0");
-        sql.append("FROM `member`");
-        sql.append("WHERE loginId = ?", loginId);
-
-        boolean isLoginIdDup = MysqlUtil.selectRowBooleanValue(sql);
-
-        if(isLoginIdDup) {
-          System.out.printf("\"%s\"(은)는 이미 사용중인 로그인 아이디입니다.\n", loginId);
-          continue;
-        }
-
-        break;
-      }
-
-      // 로그인 비밀번호 입력
-      while (true) {
-        System.out.print("로그인 비밀번호 : ");
-        loginPw = sc.nextLine();
-
-        if(loginPw.trim().isEmpty()) {
-          System.out.println("로그인 비밀번호를 입력해주세요.");
-          continue;
-        }
-
-        boolean loginPwConfirmIsSame = true;
-
-        while (true) {
-          System.out.print("로그인 비밀번호 확인 : ");
-          loginPwConfirm = sc.nextLine();
-
-          if(!loginPw.equals(loginPwConfirm)) {
-            System.out.println("로그인 비밀번호 확인이 일치하지 않습니다.");
-
-            loginPwConfirmIsSame = false;
-            continue;
-          }
-
-          break;
-        }
-        if(loginPwConfirmIsSame) {
-          break;
-        }
-      }
-
-      // 로그인 아이디 입력
-      while (true) {
-        System.out.print("이름 : ");
-        name = sc.nextLine();
-
-        if(name.trim().isEmpty()) {
-          System.out.println("이름을 입력해주세요.");
-          continue;
-        }
-
-        break;
-      }
-
-      SecSql sql = new SecSql();
-      sql.append("INSERT INTO `member`");
-      sql.append("SET regDate = NOW()");
-      sql.append(", updateDate = NOW()");
-      sql.append(", loginId = ?", loginId);
-      sql.append(", loginPw = ?", loginPw);
-      sql.append(", name = ?", name);
-
-      MysqlUtil.insert(sql);
-
-      System.out.printf("\"%s\"님 회원 가입 되었습니다.\n", name);
-
+      memberController.join();
     } else if (rq.getUrlPath().equals("exit")) {
       System.out.println("프로그램을 종료합니다.");
       System.exit(0);

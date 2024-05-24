@@ -1,14 +1,15 @@
-package com.sbs.text.board;
+package com.sbs.text.board.member;
 
 import java.util.Map;
 
 public class Member {
-  int id;
-  String regDate;
-  String updateDate;
-  String loginId;
-  String loginPw;
-  String name;
+  private int id;
+  private String regDate;
+  private String updateDate;
+  private String loginId;
+  private String loginPw;
+  private String name;
+
 
   public Member(Map<String, Object> memberMap) {
     this.id = (int) memberMap.get("id");
