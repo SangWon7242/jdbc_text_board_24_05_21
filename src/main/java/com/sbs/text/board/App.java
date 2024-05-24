@@ -97,7 +97,7 @@ public class App {
       sql.append("FROM article");
       sql.append("WHERE id = ?", id);
 
-      boolean articleIsExists = MysqlUtil.selectRowIntValue(sql) == 1;
+      boolean articleIsExists = MysqlUtil.selectRowBooleanValue(sql);
 
       if(!articleIsExists) {
         System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
@@ -132,11 +132,11 @@ public class App {
       }
 
       SecSql sql = new SecSql();
-      sql.append("SELECT COUNT(*) AS cnt");
+      sql.append("SELECT COUNT(*) > 0");
       sql.append("FROM article");
       sql.append("WHERE id = ?", id);
 
-      boolean articleIsExists = MysqlUtil.selectRowIntValue(sql) == 1;
+      boolean articleIsExists = MysqlUtil.selectRowBooleanValue(sql);
 
       if(!articleIsExists) {
         System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
@@ -172,7 +172,7 @@ public class App {
       sql.append("FROM article");
       sql.append("WHERE id = ?", id);
 
-      boolean articleIsExists = MysqlUtil.selectRowIntValue(sql) == 1;
+      boolean articleIsExists = MysqlUtil.selectRowBooleanValue(sql);
 
       if(!articleIsExists) {
         System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
@@ -201,6 +201,18 @@ public class App {
 
         if(loginId.trim().isEmpty()) {
           System.out.println("로그인 아이디를 입력해주세요.");
+          continue;
+        }
+
+        SecSql sql = new SecSql();
+        sql.append("SELECT COUNT(*) > 0");
+        sql.append("FROM `member`");
+        sql.append("WHERE loginId = ?", loginId);
+
+        boolean isLoginIdDup = MysqlUtil.selectRowBooleanValue(sql);
+
+        if(isLoginIdDup) {
+          System.out.printf("\"%s\"(은)는 이미 사용중인 로그인 아이디입니다.\n", loginId);
           continue;
         }
 
