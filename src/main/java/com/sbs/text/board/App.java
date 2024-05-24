@@ -84,6 +84,43 @@ public class App {
         System.out.printf("%d / %s\n", article.id, article.title);
       }
 
+    } else if (rq.getUrlPath().equals("/usr/article/detail")) {
+      int id = rq.getIntParam("id", 0);
+
+      if (id == 0) {
+        System.out.println("id를 올바르게 입력해주세요.");
+        return;
+      }
+
+      SecSql sql = new SecSql();
+      sql.append("SELECT COUNT(*) AS cnt");
+      sql.append("FROM article");
+      sql.append("WHERE id = ?", id);
+
+      boolean articleIsExists = MysqlUtil.selectRowIntValue(sql) == 1;
+
+      if(!articleIsExists) {
+        System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+        return;
+      }
+
+      sql = new SecSql();
+      sql.append("SELECT *");
+      sql.append("FROM article");
+      sql.append("WHERE id = ?", id);
+
+      Map<String, Object> articleMap = MysqlUtil.selectRow(sql);
+
+      Article article = new Article(articleMap);
+
+      System.out.println("== 게시물 상세보기 ==");
+      System.out.printf("번호 : %d\n", article.id);
+      System.out.printf("작성날짜 : %s\n", article.regDate);
+      System.out.printf("수정날짜 : %s\n", article.updateDate);
+      System.out.printf("제목 : %s\n", article.title);
+      System.out.printf("내용 : %s\n", article.body);
+
+
     } else if (rq.getUrlPath().equals("/usr/article/modify")) {
       System.out.println("== 게시물 수정 ==");
 
@@ -94,13 +131,25 @@ public class App {
         return;
       }
 
+      SecSql sql = new SecSql();
+      sql.append("SELECT COUNT(*) AS cnt");
+      sql.append("FROM article");
+      sql.append("WHERE id = ?", id);
+
+      boolean articleIsExists = MysqlUtil.selectRowIntValue(sql) == 1;
+
+      if(!articleIsExists) {
+        System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+        return;
+      }
+
       System.out.print("새 제목 : ");
       String title = sc.nextLine();
 
       System.out.print("새 내용 : ");
       String body = sc.nextLine();
 
-      SecSql sql = new SecSql();
+      sql = new SecSql();
       sql.append("UPDATE article");
       sql.append("SET title = ?", title);
       sql.append(", `body` = ?", body);
