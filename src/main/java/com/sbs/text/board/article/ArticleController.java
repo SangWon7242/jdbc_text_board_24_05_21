@@ -13,6 +13,11 @@ public class ArticleController {
   }
 
   public void write() {
+    if(!Container.session.isLogined()) {
+      System.out.println("로그인 후 이용해주세요.");
+      return;
+    }
+
     System.out.println("== 게시물 추가 ==");
 
     System.out.print("제목 : ");
@@ -67,6 +72,11 @@ public class ArticleController {
   }
 
   public void modify(Rq rq) {
+    if(!Container.session.isLogined()) {
+      System.out.println("로그인 후 이용해주세요.");
+      return;
+    }
+
     System.out.println("== 게시물 수정 ==");
 
     int id = rq.getIntParam("id", 0);
@@ -95,6 +105,11 @@ public class ArticleController {
   }
 
   public void delete(Rq rq) {
+    if(!Container.session.isLogined()) {
+      System.out.println("로그인 후 이용해주세요.");
+      return;
+    }
+
     int id = rq.getIntParam("id", 0);
 
     if (id == 0) {

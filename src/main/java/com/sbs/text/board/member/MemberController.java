@@ -148,7 +148,17 @@ public class MemberController {
     }
 
     System.out.printf("\"%s\"님 로그인 되었습니다.\n", member.getLoginId());
-    Container.session.loginedMember = member;
+    Container.session.login(member);
+  }
+
+  public void logout() {
+    if(Container.session.isLogout()) {
+      System.out.println("로그인 후 이용해주세요.");
+      return;
+    }
+
+    Container.session.loginedMember = null;
+    System.out.println("로그아웃 되었습니다.");
   }
 
   public void whoami() {
