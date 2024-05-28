@@ -2,30 +2,25 @@ package com.sbs.text.board.article;
 
 import com.sbs.text.board.Rq;
 import com.sbs.text.board.container.Container;
-import com.sbs.text.board.util.MysqlUtil;
-import com.sbs.text.board.util.SecSql;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ArticleController {
+  private ArticleService articleService;
+
+  public ArticleController() {
+    articleService = Container.articleService;
+  }
+
   public void write() {
     System.out.println("== 게시물 추가 ==");
 
-    System.out.print("제목) ");
+    System.out.print("제목 : ");
     String title = Container.scanner.nextLine();
-    System.out.print("내용) ");
+    System.out.print("내용 : ");
     String body = Container.scanner.nextLine();
 
-    SecSql sql = new SecSql();
-    sql.append("INSERT INTO article");
-    sql.append("SET regDate = NOW()");
-    sql.append(", updateDate = NOW()");
-    sql.append(", title = ?", title);
-    sql.append(", `body` = ?", body);
-
-    int id = MysqlUtil.insert(sql);
+    int id = articleService.write(title, body);
 
     Article article = new Article(id, title, body);
 
@@ -33,20 +28,9 @@ public class ArticleController {
   }
 
   public void showList() {
-    List<Article> articles = new ArrayList<>();
-
     System.out.println("== 게시물 리스트 ==");
 
-    SecSql sql = new SecSql();
-    sql.append("SELECT *");
-    sql.append("FROM article");
-    sql.append("ORDER BY id DESC");
-
-    List<Map<String, Object>> articlesListMap = MysqlUtil.selectRows(sql);
-
-    for (Map<String, Object> articleMap : articlesListMap) {
-      articles.add(new Article(articleMap));
-    }
+    List<Article> articles = articleService.getArticles();
 
     if (articles.isEmpty()) {
       System.out.println("게시물이 존재하지 않습니다.");
@@ -66,26 +50,12 @@ public class ArticleController {
       return;
     }
 
-    SecSql sql = new SecSql();
-    sql.append("SELECT COUNT(*) AS cnt");
-    sql.append("FROM article");
-    sql.append("WHERE id = ?", id);
+    Article article = articleService.getArticleById(id);
 
-    boolean articleIsExists = MysqlUtil.selectRowBooleanValue(sql);
-
-    if (!articleIsExists) {
+    if (article == null) {
       System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
       return;
     }
-
-    sql = new SecSql();
-    sql.append("SELECT *");
-    sql.append("FROM article");
-    sql.append("WHERE id = ?", id);
-
-    Map<String, Object> articleMap = MysqlUtil.selectRow(sql);
-
-    Article article = new Article(articleMap);
 
     System.out.println("== 게시물 상세보기 ==");
     System.out.printf("번호 : %d\n", article.getId());
@@ -106,14 +76,9 @@ public class ArticleController {
       return;
     }
 
-    SecSql sql = new SecSql();
-    sql.append("SELECT COUNT(*) > 0");
-    sql.append("FROM article");
-    sql.append("WHERE id = ?", id);
+    Article article = articleService.getArticleById(id);
 
-    boolean articleIsExists = MysqlUtil.selectRowBooleanValue(sql);
-
-    if (!articleIsExists) {
+    if (article == null) {
       System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
       return;
     }
@@ -124,13 +89,7 @@ public class ArticleController {
     System.out.print("새 내용 : ");
     String body = Container.scanner.nextLine();
 
-    sql = new SecSql();
-    sql.append("UPDATE article");
-    sql.append("SET title = ?", title);
-    sql.append(", `body` = ?", body);
-    sql.append("WHERE id = ?", id);
-
-    MysqlUtil.update(sql);
+    articleService.update(id, title, body);
 
     System.out.printf("%d번 게시물이 수정되었습니다.\n", id);
   }
@@ -143,23 +102,14 @@ public class ArticleController {
       return;
     }
 
-    SecSql sql = new SecSql();
-    sql.append("SELECT COUNT(*) AS cnt");
-    sql.append("FROM article");
-    sql.append("WHERE id = ?", id);
+    Article article = articleService.getArticleById(id);
 
-    boolean articleIsExists = MysqlUtil.selectRowBooleanValue(sql);
-
-    if (!articleIsExists) {
+    if (article == null) {
       System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
       return;
     }
 
-    sql = new SecSql();
-    sql.append("DELETE FROM article");
-    sql.append("WHERE id = ?", id);
-
-    MysqlUtil.delete(sql);
+    articleService.delete(id);
 
     System.out.printf("%d번 게시물이 삭제되었습니다.\n", id);
   }
