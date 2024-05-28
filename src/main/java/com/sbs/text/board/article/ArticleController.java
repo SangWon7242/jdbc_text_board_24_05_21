@@ -43,8 +43,10 @@ public class ArticleController {
       return;
     }
 
+    System.out.println("번호 / 제목 / 작성자명");
+
     for (Article article : articles) {
-      System.out.printf("%d / %s\n", article.getId(), article.getTitle());
+      System.out.printf("%d / %s / %s\n", article.getId(), article.getTitle(), article.getExtra__writerName());
     }
   }
 
@@ -69,7 +71,7 @@ public class ArticleController {
     System.out.printf("수정날짜 : %s\n", article.getUpdateDate());
     System.out.printf("제목 : %s\n", article.getTitle());
     System.out.printf("내용 : %s\n", article.getBody());
-
+    System.out.printf("작성자 : %s\n", article.getExtra__writerName());
   }
 
   public void modify(Rq rq) {

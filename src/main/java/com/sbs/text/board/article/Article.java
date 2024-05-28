@@ -14,11 +14,7 @@ public class Article {
   private String title;
   private String body;
 
-  public Article(int id, String title, String body) {
-    this.id = id;
-    this.title = title;
-    this.body = body;
-  }
+  private String extra__writerName;
 
   public Article(Map<String, Object> articleMap) {
     this.id = (int) articleMap.get("id");
@@ -26,5 +22,9 @@ public class Article {
     this.updateDate = (String) articleMap.get("updateDate");
     this.title = (String) articleMap.get("title");
     this.body = (String) articleMap.get("body");
+
+    if(articleMap.get("extra__writerName") != null) {
+      this.extra__writerName = (String) articleMap.get("extra__writerName");
+    }
   }
 }
