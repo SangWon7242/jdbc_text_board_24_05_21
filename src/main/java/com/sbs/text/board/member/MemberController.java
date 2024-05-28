@@ -91,6 +91,11 @@ public class MemberController {
     String loginPw;
     Member member;
 
+    if(Container.session.loginedMember != null) {
+      System.out.println("로그아웃 후 이용해주세요.");
+      return;
+    }
+
     System.out.println("== 로그인 ==");
 
     // 로그인 아이디 입력
@@ -142,6 +147,18 @@ public class MemberController {
       break;
     }
 
-    System.out.printf("\"%s\"님 회원 가입 되었습니다.\n", member.getLoginId());
+    System.out.printf("\"%s\"님 로그인 되었습니다.\n", member.getLoginId());
+    Container.session.loginedMember = member;
+  }
+
+  public void whoami() {
+    String loginId;
+
+    if(Container.session.loginedMember == null) {
+      System.out.println("로그인 후 이용해주세요.");
+    } else {
+      loginId = Container.session.loginedMember.getLoginId();
+      System.out.printf("현재 로그인 한 회원은 \"%s\" 입니다.\n", loginId);
+    }
   }
 }
