@@ -2,6 +2,7 @@ package com.sbs.text.board.article;
 
 import com.sbs.text.board.Rq;
 import com.sbs.text.board.container.Container;
+import com.sbs.text.board.member.Member;
 
 import java.util.List;
 
@@ -18,6 +19,8 @@ public class ArticleController {
       return;
     }
 
+    Member member = Container.session.loginedMember;
+
     System.out.println("== 게시물 추가 ==");
 
     System.out.print("제목 : ");
@@ -25,11 +28,9 @@ public class ArticleController {
     System.out.print("내용 : ");
     String body = Container.scanner.nextLine();
 
-    int id = articleService.write(title, body);
+    int id = articleService.write(title, body, member.getId());
 
-    Article article = new Article(id, title, body);
-
-    System.out.printf("%d번 게시물이 등록되었습니다.\n", article.getId());
+    System.out.printf("%d번 게시물이 등록되었습니다.\n", id);
   }
 
   public void showList() {

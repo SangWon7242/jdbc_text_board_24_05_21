@@ -40,3 +40,6 @@ CREATE TABLE `member` (
 	loginPw CHAR(200) NOT NULL,
 	`name` CHAR(100) NOT NULL
 );
+
+# 게시물 테이블에 memberId 칼럼 추가
+ALTER TABLE article ADD COLUMN memberId INT UNSIGNED NOT NULL AFTER updateDate;

@@ -10,8 +10,8 @@ public class ArticleService {
   public ArticleService() {
     articleRepository = Container.articleRepository;
   }
-  public int write(String title, String body) {
-    return articleRepository.write(title, body);
+  public int write(String title, String body, int memberId) {
+    return articleRepository.write(title, body, memberId);
   }
 
   public void update(int id, String title, String body) {
