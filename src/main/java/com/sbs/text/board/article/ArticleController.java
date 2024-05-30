@@ -77,13 +77,6 @@ public class ArticleController {
   }
 
   public void modify(Rq rq) {
-    if(!Container.session.isLogined()) {
-      System.out.println("로그인 후 이용해주세요.");
-      return;
-    }
-
-    System.out.println("== 게시물 수정 ==");
-
     int id = rq.getIntParam("id", 0);
 
     if (id == 0) {
@@ -91,10 +84,22 @@ public class ArticleController {
       return;
     }
 
+    if(!Container.session.isLogined()) {
+      System.out.println("로그인 후 이용해주세요.");
+      return;
+    }
+
+    System.out.println("== 게시물 수정 ==");
+
     Article article = articleService.getArticleById(id);
 
     if (article == null) {
       System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+      return;
+    }
+
+    if(article.getMemberId() != Container.session.loginedMember.getId()) {
+      System.out.println("권한이 없습니다.");
       return;
     }
 
@@ -110,11 +115,6 @@ public class ArticleController {
   }
 
   public void delete(Rq rq) {
-    if(!Container.session.isLogined()) {
-      System.out.println("로그인 후 이용해주세요.");
-      return;
-    }
-
     int id = rq.getIntParam("id", 0);
 
     if (id == 0) {
@@ -122,10 +122,20 @@ public class ArticleController {
       return;
     }
 
+    if(!Container.session.isLogined()) {
+      System.out.println("로그인 후 이용해주세요.");
+      return;
+    }
+
     Article article = articleService.getArticleById(id);
 
     if (article == null) {
       System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+      return;
+    }
+
+    if(article.getMemberId() != Container.session.loginedMember.getId()) {
+      System.out.println("권한이 없습니다.");
       return;
     }
 

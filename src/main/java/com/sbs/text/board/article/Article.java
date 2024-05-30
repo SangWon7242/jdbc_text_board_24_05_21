@@ -11,6 +11,7 @@ public class Article {
   private int id;
   private String regDate;
   private String updateDate;
+  private int memberId;
   private String title;
   private String body;
   private int hit;
@@ -21,6 +22,7 @@ public class Article {
     this.id = (int) articleMap.get("id");
     this.regDate = (String) articleMap.get("regDate");
     this.updateDate = (String) articleMap.get("updateDate");
+    this.memberId = (int) articleMap.get("memberId");
     this.title = (String) articleMap.get("title");
     this.body = (String) articleMap.get("body");
     this.hit = (int) articleMap.get("hit");
