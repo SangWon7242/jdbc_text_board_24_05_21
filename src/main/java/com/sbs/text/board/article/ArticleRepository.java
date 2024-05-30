@@ -40,13 +40,39 @@ public class ArticleRepository {
     MysqlUtil.delete(sql);
   }
 
-  public List<Article> getArticles() {
+  public List<Article> getArticles(Map<String, Object> args) {
     SecSql sql = new SecSql();
-    sql.append("SELECT A.*, M.name AS extra__writerName");
+
+    String searchKeyword = "";
+
+    if(args.containsKey("searchKeyword")) {
+      searchKeyword = (String) args.get("searchKeyword");
+    }
+
+    int limitFrom = -1;
+    int limitTake = -1;
+
+    if(args.containsKey("limitFrom")) {
+      limitFrom = (int) args.get("limitFrom");
+    }
+
+    if(args.containsKey("limitTake")) {
+      limitTake = (int) args.get("limitTake");
+    }
+
+    sql.append("SELECT A.*,");
+    sql.append("IFNULL(M.name, '미정') AS extra__writerName");
     sql.append("FROM article AS A");
-    sql.append("INNER JOIN `member` AS M");
+    sql.append("LEFT JOIN `member` AS M");
     sql.append("ON A.memberId = M.id");
+    if(!searchKeyword.isEmpty()) {
+      sql.append("WHERE A.title Like CONCAT('%', ?, '%')", searchKeyword);
+    }
     sql.append("ORDER BY id DESC");
+
+    if(limitFrom != -1) {
+      sql.append("LIMIT ?, ?", limitFrom, limitTake);
+    }
 
     List<Map<String, Object>> articlesListMap = MysqlUtil.selectRows(sql);
 
@@ -61,9 +87,11 @@ public class ArticleRepository {
 
   public Article getArticleById(int id) {
     SecSql sql = new SecSql();
-    sql.append("SELECT A.*, M.name AS extra__writerName");
+
+    sql.append("SELECT A.*,");
+    sql.append("IFNULL(M.name, '미정') AS extra__writerName");
     sql.append("FROM article AS A");
-    sql.append("INNER JOIN `member` AS M");
+    sql.append("LEFT JOIN `member` AS M");
     sql.append("ON A.memberId = M.id");
     sql.append("WHERE A.id = ?", id);
 

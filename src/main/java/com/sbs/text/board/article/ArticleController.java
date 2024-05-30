@@ -33,10 +33,14 @@ public class ArticleController {
     System.out.printf("%d번 게시물이 등록되었습니다.\n", id);
   }
 
-  public void showList() {
+  public void showList(Rq rq) {
+    int page = rq.getIntParam("page", 1);
+    String searchKeyword = rq.getParam("searchKeyword", "");
+    int pageItemCount = 10;
+
     System.out.println("== 게시물 리스트 ==");
 
-    List<Article> articles = articleService.getArticles();
+    List<Article> articles = articleService.getArticles(page, pageItemCount, searchKeyword);
 
     if (articles.isEmpty()) {
       System.out.println("게시물이 존재하지 않습니다.");
