@@ -75,4 +75,14 @@ public class ArticleRepository {
 
     return new Article(articleMap);
   }
+
+  public void increaseHit(int id) {
+    SecSql sql = new SecSql();
+
+    sql.append("UPDATE article");
+    sql.append("SET hit = hit + 1");
+    sql.append("WHERE id = ?", id);
+
+    MysqlUtil.update(sql);
+  }
 }

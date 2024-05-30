@@ -13,6 +13,7 @@ public class Article {
   private String updateDate;
   private String title;
   private String body;
+  private int hit;
 
   private String extra__writerName;
 
@@ -22,6 +23,7 @@ public class Article {
     this.updateDate = (String) articleMap.get("updateDate");
     this.title = (String) articleMap.get("title");
     this.body = (String) articleMap.get("body");
+    this.hit = (int) articleMap.get("hit");
 
     if(articleMap.get("extra__writerName") != null) {
       this.extra__writerName = (String) articleMap.get("extra__writerName");
