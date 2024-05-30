@@ -22,35 +22,14 @@ CREATE TABLE `member` (
 	`name` CHAR(100) NOT NULL
 );
 
-# 회원 테스트 데이터
-INSERT INTO `member`
-SET regDate = NOW(),
-updateDate = NOW(),
-loginId = 'admin',
-loginPw = '1234',
-`name` = '관리자';
-
-INSERT INTO `member`
-SET regDate = NOW(),
-updateDate = NOW(),
-loginId = 'user1',
-loginPw = '1234',
-`name` = '회원1';
-
-INSERT INTO `member`
-SET regDate = NOW(),
-updateDate = NOW(),
-loginId = 'user2',
-loginPw = '1234',
-`name` = '회원2';
-
 # 게시물 테이블에 memberId 칼럼 추가
 ALTER TABLE article ADD COLUMN memberId INT UNSIGNED NOT NULL AFTER updateDate;
 
 # 게시물 테이블에 hit(조회수) 칼럼 추가
 ALTER TABLE article ADD COLUMN hit INT UNSIGNED NOT NULL AFTER `body`;
 
-DESC article;
+# 멤버 테이블에 email 칼럼 추가
+ALTER TABLE `member` ADD COLUMN email CHAR(200) NOT NULL UNIQUE;
 
 # 게시물 테스트 데이터, memberId 추가
 INSERT INTO article
@@ -76,3 +55,28 @@ memberId = 3,
 title = '제목3',
 `body` = '내용3',
 hit = 0;
+
+# 회원 테스트 데이터
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'admin',
+loginPw = '1234',
+`name` = '관리자',
+email = 'admin@test.com';
+
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'user1',
+loginPw = '1234',
+`name` = '회원1',
+email = 'user1@test.com';
+
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'user2',
+loginPw = '1234',
+`name` = '회원2',
+email = 'user2@test.com';

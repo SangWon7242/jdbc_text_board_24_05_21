@@ -19,4 +19,8 @@ public class MemberService {
   public Member getMemberByLoginId(String loginId) {
     return memberRepository.getMemberByLoginId(loginId);
   }
+
+  public void changeLoginPw(String loginId, String email, String newLoginPw) {
+    memberRepository.changeLoginPw(loginId, email, newLoginPw);
+  }
 }

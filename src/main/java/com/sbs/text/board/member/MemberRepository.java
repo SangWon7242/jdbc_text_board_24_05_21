@@ -41,4 +41,14 @@ public class MemberRepository {
 
     return new Member(memberMap);
   }
+
+  public void changeLoginPw(String loginId, String email, String newLoginPw) {
+    SecSql sql = new SecSql();
+    sql.append("UPDATE `member`");
+    sql.append("SET loginPw = ?", newLoginPw);
+    sql.append("WHERE loginId = ?", loginId);
+    sql.append("AND email = ?", email);
+
+    MysqlUtil.update(sql);
+  }
 }
